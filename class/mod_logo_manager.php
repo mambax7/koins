@@ -32,7 +32,7 @@ class Koins_Class_ModLogoManager
 
         while ($file = $dir->read()) {
             $filePath = $xoopsModulePath . '/' . $file;
-            if ('.' == substr($file, 0, 1)) {
+            if ('.' === substr($file, 0, 1)) {
                 continue;
             }
             if (is_file($filePath)) {

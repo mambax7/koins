@@ -44,10 +44,10 @@ class koins_controller_apply extends Koins_Abstract_Controller
 
     public function main()
     {
-        if ('confirm' == Koins::$Action) {
+        if ('confirm' === Koins::$Action) {
             $this->_validateTicket();
             $this->_confirm();
-        } elseif ('apply' == Koins::$Action) {
+        } elseif ('apply' === Koins::$Action) {
             $this->_validateTicket();
             $this->_apply();
         } else {
@@ -74,10 +74,10 @@ class koins_controller_apply extends Koins_Abstract_Controller
                     continue;
                 }
 
-                $module =& $moduleHandler->getByDirname($dirname);
+                $module = $moduleHandler->getByDirname($dirname);
 
                 if (!is_object($module)) {
-                    $module =& $moduleHandler->create();
+                    $module = $moduleHandler->create();
                     $module->loadInfoAsVar($dirname, false);
                 }
 

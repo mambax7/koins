@@ -65,7 +65,7 @@ class koins_controller_default extends Koins_Abstract_Controller
             $this->_download();
         } elseif (Koins::get('apply2module')) {
             $this->_apply2module();
-        } elseif ('viewimage' == Koins::$Action) {
+        } elseif ('viewimage' === Koins::$Action) {
             $this->_viewimage();
         } else {
             $this->_default();

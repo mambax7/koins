@@ -49,13 +49,13 @@ function koins_installer($module, $mydirname, $event)
 
     if ($handler = @opendir($tplPath . '/')) {
         while (false !== ($file = readdir($handler))) {
-            if ('.' == substr($file, 0, 1)) {
+            if ('.' === substr($file, 0, 1)) {
                 continue;
             }
 
             $filePath = $tplPath . '/' . $file;
 
-            if (is_file($filePath) and '.tpl' == substr($file, -4)) {
+            if (is_file($filePath) and '.tpl' === substr($file, -4)) {
                 $mtime   = (int)(@filemtime($filePath));
                 $tplfile = $tplfileHandler->create();
                 $tplfile->setVar('tpl_source', file_get_contents($filePath), true);
@@ -69,18 +69,18 @@ function koins_installer($module, $mydirname, $event)
                 $tplfile->setVar('tpl_type', 'module');
 
                 if (!$tplfileHandler->insert($tplfile)) {
-                    $ret[] = '<span style="color:#ff0000;">ERROR: Could not insert template <b>' . htmlspecialchars($file) . '</b> to the database.</span><br>';
+                    $ret[] = '<span style="color:#ff0000;">ERROR: Could not insert template <b>' . htmlspecialchars($file, ENT_QUOTES | ENT_HTML5) . '</b> to the database.</span><br>';
                 } else {
                     $tplid = $tplfile->getVar('tpl_id');
-                    $ret[] = 'Template <b>' . htmlspecialchars($file) . '</b> added to the database. (ID: <b>' . $tplid . '</b>)<br>';
+                    $ret[] = 'Template <b>' . htmlspecialchars($file, ENT_QUOTES | ENT_HTML5) . '</b> added to the database. (ID: <b>' . $tplid . '</b>)<br>';
                     // generate compiled file
                     require_once XOOPS_ROOT_PATH . '/class/xoopsblock.php';
                     require_once XOOPS_ROOT_PATH . '/class/template.php';
 
                     if (!xoops_template_touch($tplid)) {
-                        $ret[] = '<span style="color:#ff0000;">ERROR: Failed compiling template <b>' . htmlspecialchars($mydirname . '_' . $file) . '</b>.</span><br>';
+                        $ret[] = '<span style="color:#ff0000;">ERROR: Failed compiling template <b>' . htmlspecialchars($mydirname . '_' . $file, ENT_QUOTES | ENT_HTML5) . '</b>.</span><br>';
                     } else {
-                        $ret[] = 'Template <b>' . htmlspecialchars($mydirname . '_' . $file) . '</b> compiled.</span><br>';
+                        $ret[] = 'Template <b>' . htmlspecialchars($mydirname . '_' . $file, ENT_QUOTES | ENT_HTML5) . '</b> compiled.</span><br>';
                     }
                 }
             }

@@ -212,7 +212,7 @@ class Koins_Class_IconGenerator
 
     protected function _renderTargetImg()
     {
-        if ('gif' == $this->imageType) {
+        if ('gif' === $this->imageType) {
             header('Content-type: image/gif');
             imagegif($this->targetImg);
         } else {
@@ -228,7 +228,7 @@ class Koins_Class_IconGenerator
      */
     protected function _saveTargetImg($filePath)
     {
-        if ('gif' == $this->imageType) {
+        if ('gif' === $this->imageType) {
             $ret = imagegif($this->targetImg, $filePath);
         } else {
             $ret = imagepng($this->targetImg, $filePath);
