@@ -18,7 +18,7 @@ if (!defined('KOINS_LOADED')) {
 /**
  * Class koins_controller_apply
  */
-class koins_controller_apply extends Koins_Abstract_Controller
+class Koins_controller_apply extends Koins_Abstract_Controller
 {
     protected $params = [];
 

@@ -17,6 +17,8 @@
  * @author       XOOPS Development Team
  */
 
+use XoopsModules\Koins;
+
 //require_once __DIR__ . '/setup.php';
 
 /**
@@ -26,11 +28,11 @@
  *
  * @return bool true if ready to install, false if not
  */
-function xoops_module_pre_install_xxxx(\XoopsModule $module)
+function xoops_module_pre_install_koins(\XoopsModule $module)
 {
     include __DIR__ . '/../preloads/autoloader.php';
-    /** @var \Utility $utility */
-    $utility = new \XoopsModules\xxxx\Utility();
+    /** @var Koins\Utility $utility */
+    $utility = new Koins\Utility();
     $xoopsSuccess = $utility::checkVerXoops($module);
     $phpSuccess   = $utility::checkVerPhp($module);
 
@@ -58,9 +60,9 @@ function xoops_module_install_xxxx(\XoopsModule $module)
 
     $moduleDirName = basename(dirname(__DIR__));
 
-    $helper       = assessment\Helper::getInstance();
-    $utility      = new assessment\Utility();
-    $configurator = new assessment\Configurator();
+    $helper       = Koins\Helper::getInstance();
+    $utility      = new Koins\Utility();
+    $configurator = new Koins\Common\Configurator();
     // Load language files
     $helper->loadLanguage('admin');
     $helper->loadLanguage('modinfo');
@@ -69,19 +71,19 @@ function xoops_module_install_xxxx(\XoopsModule $module)
     global $xoopsModule;
     $moduleId     = $xoopsModule->getVar('mid');
     $moduleId2    = $helper->getModule()->mid();
-    $gpermHandler = xoops_getHandler('groupperm');
+    $grouppermHandler = xoops_getHandler('groupperm');
     // access rights ------------------------------------------
-    $gpermHandler->addRight($moduleDirName . '_approve', 1, XOOPS_GROUP_ADMIN, $moduleId);
-    $gpermHandler->addRight($moduleDirName . '_submit', 1, XOOPS_GROUP_ADMIN, $moduleId);
-    $gpermHandler->addRight($moduleDirName . '_view', 1, XOOPS_GROUP_ADMIN, $moduleId);
-    $gpermHandler->addRight($moduleDirName . '_view', 1, XOOPS_GROUP_USERS, $moduleId);
-    $gpermHandler->addRight($moduleDirName . '_view', 1, XOOPS_GROUP_ANONYMOUS, $moduleId);
+    $grouppermHandler->addRight($moduleDirName . '_approve', 1, XOOPS_GROUP_ADMIN, $moduleId);
+    $grouppermHandler->addRight($moduleDirName . '_submit', 1, XOOPS_GROUP_ADMIN, $moduleId);
+    $grouppermHandler->addRight($moduleDirName . '_view', 1, XOOPS_GROUP_ADMIN, $moduleId);
+    $grouppermHandler->addRight($moduleDirName . '_view', 1, XOOPS_GROUP_USERS, $moduleId);
+    $grouppermHandler->addRight($moduleDirName . '_view', 1, XOOPS_GROUP_ANONYMOUS, $moduleId);
 
     //  ---  CREATE FOLDERS ---------------
     if (count($configurator->uploadFolders) > 0) {
         //    foreach (array_keys($GLOBALS['uploadFolders']) as $i) {
         foreach (array_keys($configurator->uploadFolders) as $i) {
-            $utilityClass::createFolder($configurator->uploadFolders[$i]);
+            $utility::createFolder($configurator->uploadFolders[$i]);
         }
     }
 
@@ -90,7 +92,7 @@ function xoops_module_install_xxxx(\XoopsModule $module)
         $file = __DIR__ . '/../assets/images/blank.png';
         foreach (array_keys($configurator->copyBlankFiles) as $i) {
             $dest = $configurator->copyBlankFiles[$i] . '/blank.png';
-            $utilityClass::copyFile($file, $dest);
+            $utility::copyFile($file, $dest);
         }
     }
     //delete .html entries from the tpl table

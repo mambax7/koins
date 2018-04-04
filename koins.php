@@ -11,7 +11,7 @@
  *
  */
 
-class koins
+class Koins
 {
     /**
      * Names cosist of [a-z0-9_]

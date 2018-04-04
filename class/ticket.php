@@ -11,7 +11,7 @@
  *
  */
 
-class koins_class_ticket
+class Koins_Class_Ticket
 {
     /**
      * @param int $timeout

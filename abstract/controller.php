@@ -11,7 +11,7 @@
  * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU GPL v2 or later
  *
  */
-abstract class koins_abstract_controller
+abstract class Koins_Abstract_Controller
 {
     protected $template = null;
     protected $data     = [];
@@ -23,7 +23,7 @@ abstract class koins_abstract_controller
     public function __construct()
     {
         global $xoopsModuleConfig;
-        $this->config         =& $xoopsModuleConfig;
+        $this->config         = $xoopsModuleConfig;
         $this->data['config'] = $this->config;
         $this->data['url']    = KOINS_URL;
     }
