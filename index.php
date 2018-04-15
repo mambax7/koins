@@ -11,7 +11,7 @@
  *
  */
 
-require __DIR__ . '/../../mainfile.php';
+require  dirname(dirname(__DIR__)) . '/mainfile.php';
 require __DIR__ . '/koins.php';
 
 Koins::setup();

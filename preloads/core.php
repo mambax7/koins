@@ -20,7 +20,7 @@ defined('XOOPS_ROOT_PATH') || die('Restricted access');
 /**
  * Class KoinsCorePreload
  */
-class KoinsCorePreload extends XoopsPreloadItem
+class KoinsCorePreload extends \XoopsPreloadItem
 {
     // to add PSR-4 autoloader
     /**
