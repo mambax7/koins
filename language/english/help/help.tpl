@@ -33,7 +33,7 @@
 
     <p class="odd">Font</p>
 
-    <p class="even"> Add an image with a height of 7px. Font image maps correspondence relation to _setupLettersImg method of Koins_Class_IconGenerator class. </p>
+    <p class="even"> Add an image with a height of 7px. Font image maps correspondence relation to setupLettersImg method of Koins\IconGenerator class. </p>
 
 
     <h4 class="odd">INSTALL/UNINSTALL</h4>

@@ -25,4 +25,4 @@ Add a png image of 28x28. The color of the figure is basically white. Please mak
 
 Font
 
-Add an image with a height of 7px. Font image maps correspondence relation to _setupLettersImg method of Koins_Class_IconGenerator class.
+Add an image with a height of 7px. Font image maps correspondence relation to setupLettersImg method of Koins\IconGenerator class.

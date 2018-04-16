@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Koins;
+
 /**
  * A simple description for this script
  *
@@ -11,14 +12,16 @@
  *
  */
 
+use  XoopsModules\Koins;
+
 if (!defined('KOINS_LOADED')) {
     die('Koins has not been loaded.');
 }
 
 /**
- * Class Koins_Class_ModLogoManager
+ * Class LogoManager
  */
-class Koins_Class_ModLogoManager
+class LogoManager
 {
     /**
      * @return array
@@ -32,7 +35,7 @@ class Koins_Class_ModLogoManager
 
         while ($file = $dir->read()) {
             $filePath = $xoopsModulePath . '/' . $file;
-            if ('.' === substr($file, 0, 1)) {
+            if (0 === strpos($file, '.')) {
                 continue;
             }
             if (is_file($filePath)) {

@@ -11,8 +11,9 @@
  *
  */
 
-require  dirname(dirname(__DIR__)) . '/mainfile.php';
-require __DIR__ . '/koins.php';
+use  XoopsModules\Koins;
 
-Koins::setup();
-Koins::execute();
+require  dirname(dirname(__DIR__)) . '/mainfile.php';
+
+Koins\MyKoins::setup();
+Koins\MyKoins::execute();

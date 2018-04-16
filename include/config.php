@@ -33,14 +33,14 @@ function getConfig()
         ],
         'uploadFolders'  => [
             constant($moduleDirNameUpper . '_UPLOAD_PATH'),
-            constant($moduleDirNameUpper . '_UPLOAD_PATH') . '/category',
-            constant($moduleDirNameUpper . '_UPLOAD_PATH') . '/screenshots',
+//            constant($moduleDirNameUpper . '_UPLOAD_PATH') . '/category',
+//            constant($moduleDirNameUpper . '_UPLOAD_PATH') . '/screenshots',
             //XOOPS_UPLOAD_PATH . '/flags'
         ],
         'copyBlankFiles' => [
             constant($moduleDirNameUpper . '_UPLOAD_PATH'),
-            constant($moduleDirNameUpper . '_UPLOAD_PATH') . '/category',
-            constant($moduleDirNameUpper . '_UPLOAD_PATH') . '/screenshots',
+//            constant($moduleDirNameUpper . '_UPLOAD_PATH') . '/category',
+//            constant($moduleDirNameUpper . '_UPLOAD_PATH') . '/screenshots',
             //XOOPS_UPLOAD_PATH . '/flags'
         ],
 
@@ -59,20 +59,19 @@ function getConfig()
 
         ],
         'oldFiles'        => [
-            '/class/request.php',
-            '/class/registry.php',
-            '/class/utilities.php',
-            '/class/util.php',
+//            '/class/request.php',
+//            '/class/registry.php',
+//            '/class/utilities.php',
+//            '/class/util.php',
             // '/include/constants.php',
             // '/include/functions.php',
-            '/ajaxrating.txt',
+//            '/ajaxrating.txt',
         ],
         'oldFolders'      => [
             '/images',
             '/css',
             '/js',
-            '/tcpdf',
-            '/images',
+            '/controller',
         ],
         'modCopyright'    => "<a href='https://xoops.org' title='XOOPS Project' target='_blank'>
                      <img src='" . constant($moduleDirNameUpper . '_AUTHOR_LOGOIMG') . '\' alt=\'XOOPS Project\' /></a>',

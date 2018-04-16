@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Koins;
+
 /**
  * A simple description for this script
  *
@@ -11,14 +12,16 @@
  *
  */
 
+use  XoopsModules\Koins;
+
 if (!defined('KOINS_LOADED')) {
     die('Koins has not been loaded.');
 }
 
 /**
- * Class Koins_Class_PartsManager
+ * Class PartsManager
  */
-class Koins_Class_PartsManager
+class PartsManager
 {
     protected static $plates = null;
     protected static $icons  = null;
@@ -29,7 +32,7 @@ class Koins_Class_PartsManager
     public static function getPlates()
     {
         if (null === self::$plates) {
-            self::$plates   = self::_getFiles('plate');
+            self::$plates   = self::getFiles('plate');
             $xoops2Plate    = self::$plates['xoops2.png'];
             $xoopsCubePlate = self::$plates['xoopscube.png'];
             unset(self::$plates['xoops2.png'], self::$plates['xoopscube.png']);
@@ -46,7 +49,7 @@ class Koins_Class_PartsManager
     public static function getIcons()
     {
         if (null === self::$icons) {
-            self::$icons = self::_getFiles('icon');
+            self::$icons = self::getFiles('icon');
             $noneIcon    = self::$icons['none.png'];
             unset(self::$icons['none.png']);
             self::$icons['none.png'] = $noneIcon;
@@ -77,7 +80,7 @@ class Koins_Class_PartsManager
      * @param string $type
      * @return array
      */
-    protected static function _getFiles($type = 'icon')
+    protected static function getFiles($type = 'icon')
     {
         if ('plate' === $type) {
             $dirpath = KOINS_PATH . '/images/plates';

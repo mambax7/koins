@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Koins;
+
 /**
  * A simple description for this script
  *
@@ -11,7 +12,13 @@
  *
  */
 
-class Koins_Class_Ticket
+use  XoopsModules\Koins;
+
+/**
+ * Class Ticket
+ * @package XoopsModules\Koins
+ */
+class Ticket
 {
     /**
      * @param int $timeout
@@ -20,9 +27,9 @@ class Koins_Class_Ticket
     public static function issue($timeout = 180)
     {
         $expire = time() + (int)$timeout;
-        $token  = md5(uniqid() . mt_rand());
+        $token  = md5(uniqid('', true) . mt_rand());
 
-        if (isset($_SESSION['koins_tickets']) and is_array($_SESSION['koins_tickets'])) {
+        if (isset($_SESSION['koins_tickets']) && is_array($_SESSION['koins_tickets'])) {
             if (count($_SESSION['koins_tickets']) >= 5) {
                 asort($_SESSION['koins_tickets']);
                 $_SESSION['koins_tickets'] = array_slice($_SESSION['koins_tickets'], -4, 4);

@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Koins;
+
 /**
  * A simple description for this script
  *
@@ -11,14 +12,16 @@
  *
  */
 
+use  XoopsModules\Koins;
+
 if (!defined('KOINS_LOADED')) {
     die('Koins has not been loaded.');
 }
 
 /**
- * Class Koins_Class_IconGenerator
+ * Class IconGenerator
  */
-class Koins_Class_IconGenerator
+class IconGenerator
 {
     protected $letters     = [];
     protected $plateImg    = null;
@@ -40,12 +43,12 @@ class Koins_Class_IconGenerator
     protected $imageType   = 'png';
 
     /**
-     * Koins_Class_IconGenerator constructor.
+     * Koins\IconGenerator constructor.
      */
     public function __construct()
     {
-        $this->_setupLetters();
-        $this->_decodeLetters();
+        $this->setupLetters();
+        $this->decodeLetters();
     }
 
     /**
@@ -122,7 +125,7 @@ class Koins_Class_IconGenerator
     {
         //$this->fontType = 'gothic';
         $this->fontType = 'arial';
-        $this->_setupLettersImg();
+        $this->setupLettersImg();
     }
 
     /**
@@ -131,7 +134,7 @@ class Koins_Class_IconGenerator
      * @param $lowX
      * @param $lowY
      */
-    public function setLinePosistion($upX, $upY, $lowX, $lowY)
+    public function setLinePosition($upX, $upY, $lowX, $lowY)
     {
         $this->upX  = $upX;
         $this->upY  = $upY;
@@ -145,9 +148,9 @@ class Koins_Class_IconGenerator
     public function incuseUpline($string)
     {
         if ('eurostyle' === $this->fontType) {
-            $this->_incuseDot($string, $this->upX, $this->upY);
+            $this->incuseDot($string, $this->upX, $this->upY);
         } else {
-            $this->_incuseGothic($string, $this->upX, $this->upY);
+            $this->incuseGothic($string, $this->upX, $this->upY);
         }
     }
 
@@ -157,9 +160,9 @@ class Koins_Class_IconGenerator
     public function incuseLowline($string)
     {
         if ('eurostyle' === $this->fontType) {
-            $this->_incuseDot($string, $this->lowX, $this->lowY);
+            $this->incuseDot($string, $this->lowX, $this->lowY);
         } else {
-            $this->_incuseGothic($string, $this->lowX, $this->lowY);
+            $this->incuseGothic($string, $this->lowX, $this->lowY);
         }
     }
 
@@ -175,7 +178,7 @@ class Koins_Class_IconGenerator
 
         foreach ($letters as $letter) {
             $letterMap = isset($this->letters[$letter]) ? $this->letters[$letter] : $this->letters['?'];
-            $width     = $width + count($letterMap[0]);
+            $width     += count($letterMap[0]);
         }
 
         $dividingSpace = count($letters) - 1;
@@ -187,7 +190,7 @@ class Koins_Class_IconGenerator
      * @param $x
      * @param $y
      */
-    public function setIconPostion($x, $y)
+    public function setIconPosition($x, $y)
     {
         $this->iconX = $x;
         $this->iconY = $y;
@@ -195,8 +198,8 @@ class Koins_Class_IconGenerator
 
     public function render()
     {
-        $this->_mergeImages();
-        $this->_renderTargetImg();
+        $this->mergeImages();
+        $this->renderTargetImg();
     }
 
     /**
@@ -205,12 +208,12 @@ class Koins_Class_IconGenerator
      */
     public function saveImage($filePath)
     {
-        $this->_mergeImages();
+        $this->mergeImages();
 
-        return $this->_saveTargetImg($filePath);
+        return $this->saveTargetImg($filePath);
     }
 
-    protected function _renderTargetImg()
+    protected function renderTargetImg()
     {
         if ('gif' === $this->imageType) {
             header('Content-type: image/gif');
@@ -226,7 +229,7 @@ class Koins_Class_IconGenerator
      * @param $filePath
      * @return bool
      */
-    protected function _saveTargetImg($filePath)
+    protected function saveTargetImg($filePath)
     {
         if ('gif' === $this->imageType) {
             $ret = imagegif($this->targetImg, $filePath);
@@ -239,7 +242,7 @@ class Koins_Class_IconGenerator
         return $ret;
     }
 
-    protected function _mergeImages()
+    protected function mergeImages()
     {
         imagecopymerge($this->targetImg, $this->plateImg, 0, 0, 0, 0, $this->plateWidth, $this->plateHeight, 100);
         imagecopymerge($this->targetImg, $this->fontLayer, 0, 0, 0, 0, $this->plateWidth, $this->plateHeight, 100);
@@ -255,9 +258,9 @@ class Koins_Class_IconGenerator
      * @param $x
      * @param $y
      */
-    protected function _incuseGothic($string, $x, $y)
+    protected function incuseGothic($string, $x, $y)
     {
-        $this->publisher_createLogo($string);
+        $this->createLogo($string);
         $string = strtolower($string);
 
         /*
@@ -284,7 +287,7 @@ class Koins_Class_IconGenerator
      * @param $title
      * @return bool
      */
-    protected function publisher_createLogo($title)
+    protected function createLogo($title)
     {
         if (!extension_loaded('gd')) {
             return false;
@@ -343,7 +346,7 @@ class Koins_Class_IconGenerator
      * @param $x
      * @param $y
      */
-    protected function _incuseDot($string, $x, $y)
+    protected function incuseDot($string, $x, $y)
     {
         $string  = strtolower($string);
         $letters = str_split($string);
@@ -363,7 +366,7 @@ class Koins_Class_IconGenerator
         }
     }
 
-    protected function _setupLettersImg()
+    protected function setupLettersImg()
     {
         $letterDir          = KOINS_PATH . '/images/letters';
         $this->letters['a'] = "$letterDir/a.png";
@@ -410,7 +413,7 @@ class Koins_Class_IconGenerator
         $this->letters['?'] = "$letterDir/unknown.png";
     }
 
-    protected function _setupLetters()
+    protected function setupLetters()
     {
         $this->letters['a'] = '****/*  */****/*  */*  *';
         $this->letters['b'] = '****/*  */*** /*  */****';
@@ -456,15 +459,15 @@ class Koins_Class_IconGenerator
         $this->letters['?'] = '****/****/****/****/****';
     }
 
-    protected function _decodeLetters()
+    protected function decodeLetters()
     {
-        foreach ($this->letters as &$letter) {
+        foreach ($this->letters as $letter) {
             $lines = explode('/', $letter);
 
-            foreach ($lines as &$line) {
+            foreach ($lines as $line) {
                 $dots = str_split($line);
 
-                foreach ($dots as &$dot) {
+                foreach ($dots as $dot) {
                     $dot = ('*' === $dot);
                 }
 

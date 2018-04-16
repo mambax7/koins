@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Koins;
+
 /**
  * A simple description for this script
  *
@@ -11,14 +12,16 @@
  *
  */
 
+use  XoopsModules\Koins;
+
 if (!defined('KOINS_LOADED')) {
     die('Koins has not been loaded.');
 }
 
 /**
- * Class koins_controller_default
+ * Class Koins\DefaultController
  */
-class koins_controller_default extends Koins_Abstract_Controller
+class DefaultController extends Koins\AbstractController
 {
     protected $plates = [];
     protected $icons  = [];
@@ -30,14 +33,14 @@ class koins_controller_default extends Koins_Abstract_Controller
     protected $gdAvailable      = true;
 
     /**
-     * koins_controller_default constructor.
+     * Koins\DefaultController constructor.
      */
     public function __construct()
     {
         parent::__construct();
 
-        $this->plates = Koins_Class_PartsManager::getPlates();
-        $this->icons  = Koins_Class_PartsManager::getIcons();
+        $this->plates = PartsManager::getPlates();
+        $this->icons  = PartsManager::getIcons();
 
         $defaultPlate           = reset($this->plates);
         $defaultIcon            = reset($this->icons);
@@ -45,41 +48,41 @@ class koins_controller_default extends Koins_Abstract_Controller
         $this->defaultIconName  = $defaultIcon['name'];
         $this->defaultImgType   = 'png';
 
-        $this->params['plate']    = Koins::get('plate', $this->defaultPlateName);
-        $this->params['icon']     = Koins::get('icon', $this->defaultIconName);
-        $this->params['img_type'] = Koins::get('img_type', $this->defaultImgType);
-        $this->params['upline']   = Koins::get('upline', 'koins');
-        $this->params['lowline']  = Koins::get('lowline', 'icon maker');
+        $this->params['plate']    = Koins\MyKoins::get('plate', $this->defaultPlateName);
+        $this->params['icon']     = Koins\MyKoins::get('icon', $this->defaultIconName);
+        $this->params['img_type'] = Koins\MyKoins::get('img_type', $this->defaultImgType);
+        $this->params['upline']   = Koins\MyKoins::get('upline', 'koins');
+        $this->params['lowline']  = Koins\MyKoins::get('lowline', 'icon maker');
 
-        $this->data['plates'] =& $this->plates;
-        $this->data['icons']  =& $this->icons;
-        $this->data['errors'] =& $this->errors;
-        $this->data['params'] =& $this->params;
+        $this->data['plates'] = $this->plates;
+        $this->data['icons']  = $this->icons;
+        $this->data['errors'] = $this->errors;
+        $this->data['params'] = $this->params;
     }
 
     public function main()
     {
-        if ($this->_hasError()) {
-            $this->_default();
-        } elseif (Koins::get('download')) {
-            $this->_download();
-        } elseif (Koins::get('apply2module')) {
-            $this->_apply2module();
-        } elseif ('viewimage' === Koins::$Action) {
-            $this->_viewimage();
+        if ($this->hasError()) {
+            $this->default();
+        } elseif (Koins\MyKoins::get('download')) {
+            $this->download();
+        } elseif (Koins\MyKoins::get('apply2module')) {
+            $this->apply2module();
+        } elseif ('viewimage' === Koins\MyKoins::$Action) {
+            $this->viewimage();
         } else {
-            $this->_default();
+            $this->default();
         }
     }
 
     /**
      * @return bool
      */
-    protected function _hasError()
+    protected function hasError()
     {
-        $this->_validatePlate();
-        $this->_validateIcon();
-        $this->_validateImgType();
+        $this->validatePlate();
+        $this->validateIcon();
+        $this->validateImgType();
 
         if (isset($_SESSION['koins_errors'])) {
             $this->errors = array_merge($this->errors, $_SESSION['koins_errors']);
@@ -89,7 +92,7 @@ class koins_controller_default extends Koins_Abstract_Controller
         return (count($this->errors) > 0);
     }
 
-    protected function _default()
+    protected function default()
     {
         $params           = $this->params;
         $params['action'] = 'viewimage';
@@ -98,35 +101,35 @@ class koins_controller_default extends Koins_Abstract_Controller
 
         $this->data['newicon']['url'] = $iconUrl;
 
-        if (Koins::get('plate')) {
+        if (Koins\MyKoins::get('plate')) {
             $this->data['generated'] = true;
         }
 
-        $this->_view();
+        $this->view();
     }
 
-    protected function _viewimage()
+    protected function viewimage()
     {
-        $generator = new Koins_Class_IconGenerator();
-        $this->_generateImg($generator);
+        $generator = new Koins\IconGenerator();
+        $this->generateImg($generator);
         $generator->render();
     }
 
-    protected function _download()
+    protected function download()
     {
-        $generator = new Koins_Class_IconGenerator();
-        $this->_sendHeader();
-        $this->_generateImg($generator);
+        $generator = new Koins\IconGenerator();
+        $this->sendHeader();
+        $this->generateImg($generator);
         $generator->render();
     }
 
-    protected function _apply2module()
+    protected function apply2module()
     {
         $_SESSION['koins_params'] = $this->params;
         header('Location: ' . KOINS_URL . '/index.php?controller=apply');
     }
 
-    protected function _validatePlate()
+    protected function validatePlate()
     {
         $plateNames = array_keys($this->plates);
 
@@ -136,7 +139,7 @@ class koins_controller_default extends Koins_Abstract_Controller
         }
     }
 
-    protected function _validateIcon()
+    protected function validateIcon()
     {
         $iconNames = array_keys($this->icons);
 
@@ -146,7 +149,7 @@ class koins_controller_default extends Koins_Abstract_Controller
         }
     }
 
-    protected function _validateImgType()
+    protected function validateImgType()
     {
         $imgTypes = ['png', 'gif'];
 
@@ -156,9 +159,9 @@ class koins_controller_default extends Koins_Abstract_Controller
         }
     }
 
-    protected function _sendHeader()
+    protected function sendHeader()
     {
-        $filename = $this->_getFileName();
+        $filename = $this->getFileName();
 
         if (preg_match('/MSIE ([0-9]\.[0-9]{1,2})/', $_SERVER['HTTP_USER_AGENT'])) {
             header('Content-Disposition: inline; filename="' . $filename . '"');
@@ -174,24 +177,24 @@ class koins_controller_default extends Koins_Abstract_Controller
     /**
      * @param $generator
      */
-    protected function _saveImage(&$generator)
+    protected function saveImage($generator)
     {
         $uploadDir = XOOPS_ROOT_PATH . '/uploads/koins';
 
         if (!file_exists($uploadDir)) {
             if (@!mkdir($uploadDir)) {
-                Koins::redirect(KOINS_URL, _KOINS_ERR_MKDIR);
+                Koins\MyKoins::redirect(KOINS_URL, _KOINS_ERR_MKDIR);
             }
         }
 
-        $fileName = date('YmdHis') . $this->_getFileName();
+        $fileName = date('YmdHis') . $this->getFileName();
         $filePath = $uploadDir . '/' . $fileName;
 
         if (!$generator->saveImage($filePath)) {
-            Koins::redirect(KOINS_URL, _KOINS_ERR_SAVE_ICON);
+            Koins\MyKoins::redirect(KOINS_URL, _KOINS_ERR_SAVE_ICON);
         }
 
-        $koins             = new stdClass;
+        $koins             = new \stdClass;
         $koins->iconUrl    = XOOPS_URL . '/uploads/koins/' . $fileName;
         $koins->iconPath   = $filePath;
         $_SESSION['koins'] = $koins;
@@ -200,7 +203,7 @@ class koins_controller_default extends Koins_Abstract_Controller
     /**
      * @return string
      */
-    protected function _getFileName()
+    protected function getFileName()
     {
         return $this->params['upline'] . '_logo.' . $this->params['img_type'];
     }

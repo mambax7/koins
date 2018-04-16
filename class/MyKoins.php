@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Koins;
+
 /**
  * A simple description for this script
  *
@@ -11,24 +12,30 @@
  *
  */
 
-class Koins
+use  XoopsModules\Koins;
+
+/**
+ * Class MyKoins
+ * @package XoopsModules\Koins
+ */
+class MyKoins
 {
     /**
-     * Names cosist of [a-z0-9_]
+     * Names consist of [a-z0-9_]
      * Those are usually used for file names.
      */
     public static $_controller;
     public static $_action;
 
     /**
-     * Names cosist of [A-Za-z0-9]
+     * Names consist of [A-Za-z0-9]
      * Those are usually used for class or method names.
      */
     public static $Controller;
     public static $Action;
 
     /**
-     * Names cosist of [a-z0-9]
+     * Names consist of [a-z0-9]
      * Those are usually used for template file names.
      */
     public static $controller;
@@ -44,7 +51,7 @@ class Koins
         define('KOINS_URL', sprintf('%s/modules/%s', XOOPS_URL, KOINS_DIR));
         define('KOINS_PATH', sprintf('%s/modules/%s', XOOPS_ROOT_PATH, KOINS_DIR));
 
-        spl_autoload_register([__CLASS__, 'autoload']);
+//        spl_autoload_register([__CLASS__, 'autoload']);
 
         define('KOINS_LOADED', true);
     }
@@ -88,29 +95,29 @@ class Koins
     /**
      * @param $class
      */
-    public static function autoload($class)
-    {
-        if (class_exists($class, false)) {
-            return;
-        }
-        if (!preg_match('/^Koins_/', $class)) {
-            return;
-        }
-
-        $parts = explode('_', $class);
-        $parts = array_map([__CLASS__, 'putintoPathParts'], $parts);
-
-        $module = array_shift($parts);
-
-        $class = implode('/', $parts);
-        $path  = sprintf('%s/%s.php', KOINS_PATH, $class);
-
-        if (!file_exists($path)) {
-            return;
-        }
-
-        require $path;
-    }
+//    public static function autoload($class)
+//    {
+//        if (class_exists($class, false)) {
+//            return;
+//        }
+//        if (!preg_match('/^Koins_/', $class)) {
+//            return;
+//        }
+//
+//        $parts = explode('_', $class);
+//        $parts = array_map([__CLASS__, 'putintoPathParts'], $parts);
+//
+//        $module = array_shift($parts);
+//
+//        $class = implode('/', $parts);
+//        $path  = sprintf('%s/%s.php', KOINS_PATH, $class);
+//
+//        if (!file_exists($path)) {
+//            return;
+//        }
+//
+//        require $path;
+//    }
 
     /**
      * Usefull functions
@@ -121,7 +128,7 @@ class Koins
     public static function get($name, $default = null)
     {
         $request = isset($_GET[$name]) ? $_GET[$name] : $default;
-        if (get_magic_quotes_gpc() and !is_array($request)) {
+        if (get_magic_quotes_gpc() && !is_array($request)) {
             $request = stripslashes($request);
         }
 
@@ -136,7 +143,7 @@ class Koins
     public static function post($name, $default = null)
     {
         $request = isset($_POST[$name]) ? $_POST[$name] : $default;
-        if (get_magic_quotes_gpc() and !is_array($request)) {
+        if (get_magic_quotes_gpc() && !is_array($request)) {
             $request = stripslashes($request);
         }
 
@@ -166,8 +173,7 @@ class Koins
     public static function putintoPathParts($str)
     {
         $str = preg_replace('/[^a-zA-Z0-9]/', '', $str);
-        $str = preg_replace('/([A-Z])/', '_$1', $str);
-        $str = strtolower($str);
+        $str = strtolower(preg_replace('/([A-Z])/', '_$1', $str));
         $str = substr($str, 1, strlen($str));
 
         return $str;

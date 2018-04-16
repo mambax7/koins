@@ -1,4 +1,4 @@
-<?php
+<?php namespace XoopsModules\Koins;
 
 /**
  * A simple description for this script
@@ -11,14 +11,21 @@
  * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU GPL v2 or later
  *
  */
-abstract class Koins_Abstract_Controller
+
+use  XoopsModules\Koins;
+
+/**
+ * Class AbstractController
+ * @package XoopsModules\Koins
+ */
+abstract class AbstractController
 {
     protected $template = null;
     protected $data     = [];
     protected $config   = [];
 
     /**
-     * koins_abstract_controller constructor.
+     * Koins\AbstractController constructor.
      */
     public function __construct()
     {
@@ -32,33 +39,33 @@ abstract class Koins_Abstract_Controller
     {
     }
 
-    protected function _view()
+    protected function view()
     {
         if (!$this->template) {
-            $this->template = 'koins_' . Koins::$controller . '_' . Koins::$action . '.tpl';
+            $this->template = 'koins_' . Koins\MyKoins::$controller . '_' . Koins\MyKoins::$action . '.tpl';
         }
 
         global $xoopsOption, $xoopsTpl, $xoopsConfig, $xoopsUser, $xoopsLogger, $xoopsUserIsAdmin;
 
-        require_once XOOPS_ROOT_PATH . '/header.php';
-        $GLOBALS['xoopsOption']['template_main'] =& $this->template;
-        $this->_escapeHtml($this->data);
+        $GLOBALS['xoopsOption']['template_main'] = $this->template;
+        $this->escapeHtml($this->data);
         $xoopsTpl->assign('koins', $this->data);
+        require_once XOOPS_ROOT_PATH . '/header.php';
         require_once XOOPS_ROOT_PATH . '/footer.php';
     }
 
     /**
      * @param $vars
      */
-    protected function _escapeHtml(&$vars)
+    protected function escapeHtml(&$vars)
     {
         foreach ($vars as $key => &$var) {
             if (preg_match('/_raw$/', $key)) {
                 continue;
             } elseif (is_array($var)) {
-                $this->_escapeHtml($var);
+                $this->escapeHtml($var);
             } elseif (!is_object($var)) {
-                $var = Koins::escapeHtml($var);
+                $var = Koins\MyKoins::escapeHtml($var);
             }
         }
     }
@@ -66,10 +73,10 @@ abstract class Koins_Abstract_Controller
     /**
      * @param $generator
      */
-    protected function _generateImg(&$generator)
+    protected function generateImg($generator)
     {
-        $platePath = Koins_Class_PartsManager::getPlatePath($this->params['plate']);
-        $iconPath  = Koins_Class_PartsManager::getIconPath($this->params['icon']);
+        $platePath = PartsManager::getPlatePath($this->params['plate']);
+        $iconPath  = PartsManager::getIconPath($this->params['icon']);
 
         $generator->setImageType($this->params['img_type']);
         $generator->importPlateImg($platePath);
@@ -77,21 +84,21 @@ abstract class Koins_Abstract_Controller
         $generator->setFontColor(0, 0, 0);
 
         if ('xoops2.png' === $this->params['plate']) {
-            $generator->setFontTypeGothic();
-            $generator->setIconPostion(32, 3);
+//            $generator->setFontTypeGothic();
+            $generator->setIconPosition(32, 3);
             $lineWidth = $generator->getUpLineWidth($this->params['upline']);
             $lineX     = 45 - (int)($lineWidth / 0.55);
             //$lineX = 39 - (int)($lineWidth / 2); //for non-gothic font
-            $generator->setLinePosistion($lineX, 39, 100, 100);
+            $generator->setLinePosition($lineX, 39, 100, 100);
             $generator->incuseUpline($this->params['upline']);
         } elseif ('xoopscube.png' === $this->params['plate']) {
-            $generator->setIconPostion(100, 100);
-            $generator->setLinePosistion(40, 6, 40, 14);
+            $generator->setIconPosition(100, 100);
+            $generator->setLinePosition(40, 6, 40, 14);
             $generator->incuseUpline($this->params['upline']);
             $generator->incuseLowline($this->params['lowline']);
         } else {
             $generator->setFontTypeGothic();
-            $generator->setLinePosistion(31, 5, 31, 17);
+            $generator->setLinePosition(31, 5, 31, 17);
             $generator->incuseUpline($this->params['upline']);
             $generator->incuseLowline($this->params['lowline']);
         }

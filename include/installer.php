@@ -49,13 +49,13 @@ function koins_installer($module, $mydirname, $event)
 
     if ($handler = @opendir($tplPath . '/')) {
         while (false !== ($file = readdir($handler))) {
-            if ('.' === substr($file, 0, 1)) {
+            if (0 === strncmp($file, '.', 1)) {
                 continue;
             }
 
             $filePath = $tplPath . '/' . $file;
 
-            if (is_file($filePath) and '.tpl' === substr($file, -4)) {
+            if (is_file($filePath) && '.tpl' === substr($file, -4)) {
                 $mtime   = (int)(@filemtime($filePath));
                 $tplfile = $tplfileHandler->create();
                 $tplfile->setVar('tpl_source', file_get_contents($filePath), true);

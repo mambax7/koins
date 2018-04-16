@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A simple description for this script
  *
@@ -11,23 +12,24 @@
  *
  */
 
-$modversion['name']        = _KOINS_NAME;
-$modversion['description'] = _KOINS_DESC;
-$modversion['dirname']     = basename(__DIR__);
-$modversion['version']     = '1.00';
-$modversion['credits']     = 'Hidehito NOZAWA aka Suin <http://suin.asia>';
-$modversion['author']      = 'Hidehito NOZAWA aka Suin <http://suin.asia>';
-$modversion['license']     = 'GPL see LICENSE';
-$modversion['image']       = 'images/logo.png';
-
-$modversion['hasMain'] = 1;
-
-$modversion['hasAdmin'] = 1;
-// $modversion['adminindex'] = 'admin/index.php';
-// $modversion['adminmenu']  = 'admin/menu.php';
-
-$modversion['onInstall'] = 'class/installer.php';
-$modversion['onUpdate']  = 'class/installer.php';
+$modversion = [
+    'version'       => '1.01',
+    'module_status' => 'Beta 1',
+    'release_date'  => '2018/04/15',
+    'name'          => _KOINS_NAME,
+    'description'   => _KOINS_DESC,
+    'dirname'       => basename(__DIR__),
+    'credits'       => 'Hidehito NOZAWA aka Suin <http://suin.asia>',
+    'author'        => 'Hidehito NOZAWA aka Suin <http://suin.asia>',
+    'license'       => 'GPL see LICENSE',
+    'image'         => 'images/logoModule.png',
+    'hasMain'       => 1,
+    'hasAdmin'      => 1,
+    // 'adminindex' => 'admin/index.php',
+    // 'adminmenu'  => 'admin/menu.php',
+    'onInstall'     => 'include/installer.php',
+    'onUpdate'      => 'include/installer.php',
+];
 
 // ------------------- Help files ------------------- //
 $modversion['helpsection'] = [
