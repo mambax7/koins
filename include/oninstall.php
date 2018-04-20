@@ -53,7 +53,7 @@ function xoops_module_pre_install_koins(\XoopsModule $module)
  *
  * @return bool true if installation successful, false if not
  */
-function xoops_module_install_xxxx(\XoopsModule $module)
+function xoops_module_install_koins(\XoopsModule $module)
 {
     require_once   dirname(dirname(dirname(__DIR__))) . '/mainfile.php';
     require_once   dirname(__DIR__) . '/include/config.php';
@@ -96,8 +96,8 @@ function xoops_module_install_xxxx(\XoopsModule $module)
         }
     }
     //delete .html entries from the tpl table
-    $sql = 'DELETE FROM ' . $xoopsDB->prefix('tplfile') . " WHERE `tpl_module` = '" . $xoopsModule->getVar('dirname', 'n') . "' AND `tpl_file` LIKE '%.html%'";
-    $xoopsDB->queryF($sql);
+    $sql = 'DELETE FROM ' . $GLOBALS['xoopsDB']->prefix('tplfile') . " WHERE `tpl_module` = '" . $xoopsModule->getVar('dirname', 'n') . "' AND `tpl_file` LIKE '%.html%'";
+    $GLOBALS['xoopsDB']->queryF($sql);
 
     return true;
 }

@@ -19,14 +19,14 @@ if (!defined('KOINS_LOADED')) {
 }
 
 /**
- * Class Koins\BaseController
+ * Class Koins\ModuleController
  */
-class BaseController extends Koins\AbstractController
+class ModuleController extends Koins\AbstractController
 {
     protected $params = [];
 
     /**
-     * Koins\BaseController constructor.
+     * Koins\ModuleController constructor.
      */
     public function __construct()
     {
@@ -50,19 +50,20 @@ class BaseController extends Koins\AbstractController
         if ('confirm' === Koins\MyKoins::$Action) {
             $this->validateTicket();
             $this->confirm();
-        } elseif ('apply' === Koins\MyKoins::$Action) {
+        } elseif ('module' === Koins\MyKoins::$Action) {
             $this->validateTicket();
             $this->apply();
         } else {
-            $this->default();
+            $this->getDefault();
         }
     }
 
-    protected function default()
+    protected function getDefault()
     {
         $modules       = [];
         $exclusions    = ['.', '..', 'CVS'];
         $modulesDir    = XOOPS_ROOT_PATH . '/modules';
+        /** @var \XoopsModuleHandler $moduleHandler */
         $moduleHandler = xoops_getHandler('module');
 
         if ($handler = opendir($modulesDir)) {
@@ -77,6 +78,7 @@ class BaseController extends Koins\AbstractController
                     continue;
                 }
 
+                /** @var \XoopsModule $module */
                 $module = $moduleHandler->getByDirname($dirname);
 
                 if (!is_object($module)) {
@@ -142,7 +144,7 @@ class BaseController extends Koins\AbstractController
 
         $_SESSION['koins_modules'] = $modules;
 
-        $this->data['ticket']  = $GLOBALS['xoopsSecurity']->createToken();
+        $this->data['token']  = $GLOBALS['xoopsSecurity']->createToken();
         $this->data['modules'] = $modules;
         $this->view();
     }
@@ -162,7 +164,7 @@ class BaseController extends Koins\AbstractController
         $params['action']       = 'viewimage';
         $query                  = http_build_query($params);
         $this->data['new_icon'] = sprintf('%s/index.php?%s', KOINS_URL, $query);
-        $this->data['ticket']   = Ticket::issue();
+        $this->data['token']   = $GLOBALS['xoopsSecurity']->createToken();
 
         $this->view();
     }
@@ -188,18 +190,18 @@ class BaseController extends Koins\AbstractController
             $type = 2;
         }
 
-        if (1 == $type) { // Rename and Replace
+        if (1 === $type) { // Rename and Replace
             if ($module['icon_exists'] && $renameIcon && $module['is_renamable']) {
                 $newIconPath = dirname($module['icon_path']) . '/' . $module['renamed_old_icon'];
                 rename($module['icon_path'], $newIconPath);
-            } elseif ($module['icon_exists'] && !$renameIcon) {
+            } elseif (!$renameIcon && $module['icon_exists']) {
                 unlink($module['icon_path']);
             }
 
             $iconPath = $module['icon_path'];
-        } elseif (2 == $type) { // Create New Icon
+        } elseif (2 === $type) { // Create New Icon
             $iconPath = $module['icon_path'];
-        } elseif (3 == $type) {
+        } elseif (3 === $type) {
             $iconPath = XOOPS_ROOT_PATH . '/modules/' . $module['name'] . '/module_icon.png';
         }
 
@@ -223,13 +225,9 @@ class BaseController extends Koins\AbstractController
 
     protected function validateTicket()
     {
-        $ticket = Koins\MyKoins::post('ticket');
-
-        if (!Ticket::check($ticket)) {
-            $_SESSION['koins_errors'] = [_KOINS_ERR_TICKET];
-            $query                    = http_build_query($this->params);
-            header('Location: ' . KOINS_URL . '/index.php?' . $query);
-            die;
+        $moduleDirName = basename(dirname(__DIR__));
+        if (!$GLOBALS['xoopsSecurity']->check()) {
+            redirect_header(XOOPS_URL . "/modules/$moduleDirName/index.php", 3, implode('<br>', $GLOBALS['xoopsSecurity']->getErrors()));
         }
     }
 }

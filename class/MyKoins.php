@@ -46,13 +46,7 @@ class MyKoins
         if (defined('KOINS_LOADED')) {
             return;
         }
-
-        define('KOINS_DIR', basename(__DIR__));
-        define('KOINS_URL', sprintf('%s/modules/%s', XOOPS_URL, KOINS_DIR));
-        define('KOINS_PATH', sprintf('%s/modules/%s', XOOPS_ROOT_PATH, KOINS_DIR));
-
-//        spl_autoload_register([__CLASS__, 'autoload']);
-
+        require_once \dirname(__DIR__) . '/include/common.php';
         define('KOINS_LOADED', true);
     }
 
@@ -61,17 +55,17 @@ class MyKoins
         $controller = self::get('controller', 'default');
         $action     = self::get('action', 'default');
 
-        self::$Controller = self::putintoClassParts($controller);
-        self::$Action     = self::putintoClassParts($action);
+        self::$Controller = self::putIntoClassParts($controller);
+        self::$Action     = self::putIntoClassParts($action);
         self::$Action[0]  = strtolower(self::$Action[0]);
 
         self::$controller = strtolower(self::$Controller);
         self::$action     = strtolower(self::$Action);
 
-        self::$_controller = self::putintoPathParts(self::$Controller);
-        self::$_action     = self::putintoPathParts(self::$Action);
+        self::$_controller = self::putIntoPathParts(self::$Controller);
+        self::$_action     = self::putIntoPathParts(self::$Action);
 
-        $class    = 'Koins_Controller_' . self::$Controller;
+        $class    = '\\XoopsModules\\Koins\\' . self::$Controller . 'Controller';
         $instance = new $class();
         $instance->main();
 
@@ -105,7 +99,7 @@ class MyKoins
 //        }
 //
 //        $parts = explode('_', $class);
-//        $parts = array_map([__CLASS__, 'putintoPathParts'], $parts);
+//        $parts = array_map([__CLASS__, 'putIntoPathParts'], $parts);
 //
 //        $module = array_shift($parts);
 //
@@ -128,9 +122,9 @@ class MyKoins
     public static function get($name, $default = null)
     {
         $request = isset($_GET[$name]) ? $_GET[$name] : $default;
-        if (get_magic_quotes_gpc() && !is_array($request)) {
-            $request = stripslashes($request);
-        }
+//        if (get_magic_quotes_gpc() && !is_array($request)) {
+//            $request = stripslashes($request);
+//        }
 
         return $request;
     }
@@ -143,9 +137,9 @@ class MyKoins
     public static function post($name, $default = null)
     {
         $request = isset($_POST[$name]) ? $_POST[$name] : $default;
-        if (get_magic_quotes_gpc() && !is_array($request)) {
-            $request = stripslashes($request);
-        }
+//        if (get_magic_quotes_gpc() && !is_array($request)) {
+//            $request = stripslashes($request);
+//        }
 
         return $request;
     }
@@ -154,7 +148,7 @@ class MyKoins
      * @param $str
      * @return array|mixed|string
      */
-    public static function putintoClassParts($str)
+    public static function putIntoClassParts($str)
     {
         $str = preg_replace('/[^a-z0-9_]/', '', $str);
         $str = explode('_', $str);
@@ -170,10 +164,11 @@ class MyKoins
      * @param $str
      * @return bool|mixed|string
      */
-    public static function putintoPathParts($str)
+    public static function putIntoPathParts($str)
     {
         $str = preg_replace('/[^a-zA-Z0-9]/', '', $str);
-        $str = strtolower(preg_replace('/([A-Z])/', '_$1', $str));
+        $str = preg_replace('/([A-Z])/', '_$1', $str);
+        $str = strtolower($str);
         $str = substr($str, 1, strlen($str));
 
         return $str;

@@ -35,7 +35,7 @@ class LogoManager
 
         while ($file = $dir->read()) {
             $filePath = $xoopsModulePath . '/' . $file;
-            if (0 === strpos($file, '.')) {
+            if (0 === strncmp($file, '.', 1)) {
                 continue;
             }
             if (is_file($filePath)) {

@@ -11,9 +11,15 @@
  *
  */
 
-use  XoopsModules\Koins;
+use XoopsModules\Koins;
+//use XoopsModules\Koins\Constants;
 
-require  dirname(dirname(__DIR__)) . '/mainfile.php';
 
-Koins\MyKoins::setup();
-Koins\MyKoins::execute();
+$GLOBALS['xoopsOption']['template_main'] = 'koins_default_default.tpl';
+require_once __DIR__ . '/header.php';
+
+
+\XoopsModules\Koins\MyKoins::setup();
+\XoopsModules\Koins\MyKoins::execute();
+
+//require_once XOOPS_ROOT_PATH . '/footer.php';

@@ -19,16 +19,21 @@ $modversion = [
     'name'          => _KOINS_NAME,
     'description'   => _KOINS_DESC,
     'dirname'       => basename(__DIR__),
-    'credits'       => 'Hidehito NOZAWA aka Suin <http://suin.asia>',
+    'credits'       => 'Hidehito NOZAWA aka Suin <http://suin.asia>, Mamba, XOOPS Development Team',
     'author'        => 'Hidehito NOZAWA aka Suin <http://suin.asia>',
     'license'       => 'GPL see LICENSE',
-    'image'         => 'images/logoModule.png',
+    'image'         => 'assets/images/logoModule.png',
     'hasMain'       => 1,
     'hasAdmin'      => 1,
     // 'adminindex' => 'admin/index.php',
     // 'adminmenu'  => 'admin/menu.php',
     'onInstall'     => 'include/installer.php',
     'onUpdate'      => 'include/installer.php',
+    // ------------------- Min Requirements -------------------
+    'min_php'       => '5.5',
+    'min_xoops'     => '2.5.9',
+    'min_admin'     => '1.2',
+    'min_db'        => ['mysql' => '5.5'],
 ];
 
 // ------------------- Help files ------------------- //
@@ -38,3 +43,16 @@ $modversion['helpsection'] = [
     ['name' => _MI_KOINS_LICENSE, 'link' => 'page=license'],
     ['name' => _MI_KOINS_SUPPORT, 'link' => 'page=support'],
 ];
+
+//  ------------------- Templates -----------------------------//
+$modversion['templates'] = [
+    ['file' => 'koins_default_default.tpl', 'description' => ''],
+    ['file' => 'koins_module_default.tpl', 'description' => ''],
+    ['file' => 'koins_module_confirm.tpl', 'description' => ''],
+];
+
+
+
+
+
+

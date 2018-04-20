@@ -18,6 +18,8 @@ if (!defined('KOINS_LOADED')) {
     die('Koins has not been loaded.');
 }
 
+require_once \dirname(__DIR__) . '/include/common.php';
+
 /**
  * Class PartsManager
  */
@@ -64,7 +66,7 @@ class PartsManager
      */
     public static function getPlatePath($plateName)
     {
-        return KOINS_PATH . '/images/plates/' . $plateName;
+        return KOINS_PATH . '/assets/images/plates/' . $plateName;
     }
 
     /**
@@ -73,7 +75,7 @@ class PartsManager
      */
     public static function getIconPath($iconName)
     {
-        return KOINS_PATH . '/images/icons/' . $iconName;
+        return KOINS_PATH . '/assets/images/icons/' . $iconName;
     }
 
     /**
@@ -83,11 +85,11 @@ class PartsManager
     protected static function getFiles($type = 'icon')
     {
         if ('plate' === $type) {
-            $dirpath = KOINS_PATH . '/images/plates';
-            $dirurl  = KOINS_URL . '/images/plates';
+            $dirpath = KOINS_PATH . '/assets/images/plates';
+            $dirurl  = KOINS_URL . '/assets/images/plates';
         } else {
-            $dirpath = KOINS_PATH . '/images/icons';
-            $dirurl  = KOINS_URL . '/images/icons';
+            $dirpath = KOINS_PATH . '/assets/images/icons';
+            $dirurl  = KOINS_URL . '/assets/images/icons';
         }
 
         $files = [];

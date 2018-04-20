@@ -5,10 +5,14 @@ WORK IN PROGRESS
 
 - namespaces, autoloading (mamba)
 - XOOPS 2.5.9, PHP 7 (mamba)
-- removed @version (mamba)
 - PSR-2 code cosmetics (mamba)
 - addNavigation(basename(__FILE__))  (mamba)
 - dirname(__FILE__) to __DIR__ (mamba)
 - replaced < br /> with < br > (mamba)
 - Unnecessary double quotes (mamba)
 - started conversion to XMF (mamba)
+
+<h5>1.0   Original release</h5>
+<hr>
+
+- first release: Hidehito NOZAWA aka Suin <http://suin.asia>

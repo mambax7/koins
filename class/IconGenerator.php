@@ -39,8 +39,9 @@ class IconGenerator
     protected $upY         = 0;
     protected $lowX        = 0;
     protected $lowY        = 0;
-    protected $fontType    = 'eurostyle';
+    protected $fontType    = 'dot';
     protected $imageType   = 'png';
+    protected $font;
 
     /**
      * Koins\IconGenerator constructor.
@@ -49,6 +50,10 @@ class IconGenerator
     {
         $this->setupLetters();
         $this->decodeLetters();
+        $moduleDirName = basename(dirname(__DIR__));
+        if (!file_exists($this->font = XOOPS_ROOT_PATH . '/modules/' . $moduleDirName . '/assets/font/VeraBd.ttf')) {
+            //            return false;
+        }
     }
 
     /**
@@ -56,19 +61,18 @@ class IconGenerator
      */
     public function isAvailable()
     {
-        return (function_exists('getimagesize')
-                and function_exists('imagecreatefrompng')
-                    and function_exists('imagecreatetruecolor')
-                        and function_exists('imagecolorallocate')
-                            and function_exists('imagefill')
-                                and function_exists('imagecolortransparent')
-                                    and function_exists('imagecopymerge')
-                                        and function_exists('imagecopy')
-                                            and function_exists('imagepng')
-                                                and function_exists('imagettftext')
-                                                    and function_exists('imageantialias')
-                                                        and function_exists('imagesetpixel')
-                                                            and function_exists('imagedestroy'));
+        $ret = true;
+        if (!extension_loaded('gd')) {
+            $ret = false;
+        } else {
+            $required_functions = ['imagecreatefrompng', 'imagefttext', 'imagecopy', 'imagepng', 'imagedestroy', 'imagecolorallocate'];
+            foreach ($required_functions as $func) {
+                if (!function_exists($func)) {
+                    return false;
+                }
+            }
+        }
+        return $ret;
     }
 
     /**
@@ -90,9 +94,14 @@ class IconGenerator
         $this->plateImg    = imagecreatefrompng($plateImg);
         $this->targetImg   = imagecreatetruecolor($imageSize[0], $imageSize[1]);
         $this->fontLayer   = imagecreatetruecolor($imageSize[0], $imageSize[1]);
-        $black             = imagecolorallocate($this->fontLayer, 1, 1, 1);
+
+        $black = imagecolorallocate($this->fontLayer, 1, 1, 1);
         imagefill($this->fontLayer, 0, 0, $black);
         imagecolortransparent($this->fontLayer, $black);
+
+
+        imagepng($this->fontLayer, XOOPS_ROOT_PATH . '/modules/' . $dirname . '/assets/images/fontLayer8.png');
+
     }
 
     /**
@@ -118,14 +127,19 @@ class IconGenerator
 
     public function setFontTypeDot()
     {
-        $this->fontType = 'arial';
+        $this->fontType = 'dot';
     }
 
     public function setFontTypeGothic()
     {
-        //$this->fontType = 'gothic';
-        $this->fontType = 'arial';
+        $this->fontType = 'gothic';
         $this->setupLettersImg();
+    }
+
+    public function setFontTypeArial()
+    {
+        $this->fontType = 'arial';
+
     }
 
     /**
@@ -145,24 +159,28 @@ class IconGenerator
     /**
      * @param $string
      */
-    public function incuseUpline($string)
+    public function useUpline($string)
     {
-        if ('eurostyle' === $this->fontType) {
-            $this->incuseDot($string, $this->upX, $this->upY);
+        if ('dot' === $this->fontType) {
+            $this->useDot($string, $this->upX, $this->upY);
+        } elseif ('gothic' === $this->fontType) {
+            $this->useGothic($string, $this->upX, $this->upY);
         } else {
-            $this->incuseGothic($string, $this->upX, $this->upY);
+            $this->useArial($string, $this->upX, $this->upY);
         }
     }
 
     /**
      * @param $string
      */
-    public function incuseLowline($string)
+    public function useLowline($string)
     {
-        if ('eurostyle' === $this->fontType) {
-            $this->incuseDot($string, $this->lowX, $this->lowY);
+        if ('dot' === $this->fontType) {
+            $this->useDot($string, $this->lowX, $this->lowY);
+        } elseif ('gothic' === $this->fontType) {
+            $this->useGothic($string, $this->lowX, $this->lowY);
         } else {
-            $this->incuseGothic($string, $this->lowX, $this->lowY);
+            $this->useArial($string, $this->lowX, $this->lowY);
         }
     }
 
@@ -178,7 +196,7 @@ class IconGenerator
 
         foreach ($letters as $letter) {
             $letterMap = isset($this->letters[$letter]) ? $this->letters[$letter] : $this->letters['?'];
-            $width     += count($letterMap[0]);
+            $width     = $width + count($letterMap[0]);
         }
 
         $dividingSpace = count($letters) - 1;
@@ -198,7 +216,10 @@ class IconGenerator
 
     public function render()
     {
-        $this->mergeImages();
+        if ('arial' !== $this->fontType) {
+            $this->mergeImages();
+        }
+
         $this->renderTargetImg();
     }
 
@@ -208,7 +229,9 @@ class IconGenerator
      */
     public function saveImage($filePath)
     {
-        $this->mergeImages();
+        if ('arial' !== $this->fontType) {
+            $this->mergeImages();
+        }
 
         return $this->saveTargetImg($filePath);
     }
@@ -222,7 +245,7 @@ class IconGenerator
             header('Content-type: image/png');
             imagepng($this->targetImg);
         }
-        imagedestroy($this->targetImg);
+        imagedestroy($this->targetImg);  //mb
     }
 
     /**
@@ -244,10 +267,11 @@ class IconGenerator
 
     protected function mergeImages()
     {
+
+        $dirname = $GLOBALS['xoopsModule']->getVar('dirname');
         imagecopymerge($this->targetImg, $this->plateImg, 0, 0, 0, 0, $this->plateWidth, $this->plateHeight, 100);
         imagecopymerge($this->targetImg, $this->fontLayer, 0, 0, 0, 0, $this->plateWidth, $this->plateHeight, 100);
         imagecopy($this->targetImg, $this->iconImg, $this->iconX, $this->iconY, 0, 0, $this->iconWidth, $this->iconHeight);
-
         imagedestroy($this->plateImg);
         imagedestroy($this->iconImg);
         imagedestroy($this->fontLayer);
@@ -258,29 +282,40 @@ class IconGenerator
      * @param $x
      * @param $y
      */
-    protected function incuseGothic($string, $x, $y)
+    protected function useGothic($string, $x, $y)
+    {
+        $string  = strtolower($string);
+        $letters = str_split($string);
+
+        foreach ($letters as $letter) {
+            if (!isset($this->letters[$letter])) {
+                $letter = '?';
+            }
+            if (!file_exists($this->letters[$letter])) {
+                continue;
+            }
+
+            $letterImg    = imagecreatefrompng($this->letters[$letter]);
+            $letterSize   = getimagesize($this->letters[$letter]);
+            $letterWidth  = $letterSize[0];
+            $letterHeight = $letterSize[1];
+
+            imagecopy($this->fontLayer, $letterImg, $x, $y, 0, 0, $letterWidth, $letterHeight);
+            imagedestroy($letterImg);
+
+            $x = $x + $letterWidth;
+        }
+
+    }
+
+    /**
+     * @param $string
+     * @param $x
+     * @param $y
+     */
+    protected function useArial($string, $x, $y)
     {
         $this->createLogo($string);
-        $string = strtolower($string);
-
-        /*
-                $letters = str_split($string);
-
-                foreach ($letters as $letter) {
-                    if ( !isset($this->letters[$letter]) ) $letter = '?';
-                    if ( !file_exists($this->letters[$letter]) ) continue;
-
-                    $letterImg    = imagecreatefrompng($this->letters[$letter]);
-                    $letterSize   = getimagesize($this->letters[$letter]);
-                    $letterWidth  = $letterSize[0];
-                    $letterHeight = $letterSize[1];
-
-                    imagecopy($this->fontLayer, $letterImg, $x, $y, 0, 0, $letterWidth, $letterHeight);
-                    imagedestroy($letterImg);
-
-                    $x = $x + $letterWidth;
-                }
-        */
     }
 
     /**
@@ -289,19 +324,13 @@ class IconGenerator
      */
     protected function createLogo($title)
     {
-        if (!extension_loaded('gd')) {
+        if (!$this->isAvailable()) {
             return false;
-        }
-        $required_functions = ['imagecreatetruecolor', 'imagecolorallocate', 'imagefilledrectangle', 'imagejpeg', 'imagedestroy', 'imageftbbox'];
-        foreach ($required_functions as $func) {
-            if (!function_exists($func)) {
-                return false;
-            }
         }
 
         $dirname = $GLOBALS['xoopsModule']->getVar('dirname');
 
-        if (!file_exists($imageBase = XOOPS_ROOT_PATH . '/modules/' . $dirname . '/images/plates/xoops2.png') || !file_exists($font = XOOPS_ROOT_PATH . '/modules/' . $dirname . '/images/VeraBd.ttf')) {
+        if (!file_exists($imageBase = XOOPS_ROOT_PATH . '/modules/' . $dirname . '/assets/images/plates/xoops2.png') || !file_exists($font = XOOPS_ROOT_PATH . '/modules/' . $dirname . '/assets/font/VeraBd.ttf')) {
             return false;
         }
 
@@ -315,38 +344,28 @@ class IconGenerator
         // Write text
         $text_color      = imagecolorallocate($imageModule, 0, 0, 0);
         $space_to_border = (80 - strlen($title) * 6.5) / 2;
+
         imagefttext($imageModule, 8.5, 0, $space_to_border, 45, $text_color, $font, ucfirst($title), []);
-
         imagefttext($this->fontLayer, 8.5, 0, $space_to_border, 45, $text_color, $font, ucfirst($title), []);
-        //imagettftext ($this->fontLayer, 8.5, 0, $space_to_border, 45, $text_color, $font, ucfirst($title), array());
-
-        //        imagecopy($this->fontLayer, $letterImg, $x, $y, 0, 0, $letterWidth, $letterHeight);
-        //              imagedestroy($letterImg);
 
         // Set transparency color
         $white = imagecolorallocatealpha($imageModule, 255, 255, 255, 127);
         imagefill($imageModule, 0, 0, $white);
         imagecolortransparent($imageModule, $white);
-
-        //        imagecopymerge($this->targetImg, $this->plateImg, 0, 0, 0, 0, $this->plateWidth, $this->plateHeight, 100);
-        //              imagecopymerge($this->targetImg, $this->fontLayer, 0, 0, 0, 0, $this->plateWidth, $this->plateHeight, 100);
         imagecopy($imageModule, $this->iconImg, $this->iconX, $this->iconY, 0, 0, $this->iconWidth, $this->iconHeight);
-
-        imagepng($imageModule, XOOPS_ROOT_PATH . '/modules/' . $dirname . '/images/module_logo.png');
-
-        imagepng($this->fontLayer, XOOPS_ROOT_PATH . '/modules/' . $dirname . '/images/fontLayer.png');
+        imagepng($imageModule, XOOPS_ROOT_PATH . '/modules/' . $dirname . '/assets/images/module_logo.png');
+        imagecopymerge($this->targetImg, $imageModule, 0, 0, 0, 0, $this->plateWidth, $this->plateHeight, 100);
 
         imagedestroy($imageModule);
 
         return true;
     }
-
     /**
      * @param $string
      * @param $x
      * @param $y
      */
-    protected function incuseDot($string, $x, $y)
+    protected function useDot($string, $x, $y)
     {
         $string  = strtolower($string);
         $letters = str_split($string);
@@ -368,7 +387,7 @@ class IconGenerator
 
     protected function setupLettersImg()
     {
-        $letterDir          = KOINS_PATH . '/images/letters';
+        $letterDir          = KOINS_PATH . '/assets/images/letters';
         $this->letters['a'] = "$letterDir/a.png";
         $this->letters['b'] = "$letterDir/b.png";
         $this->letters['c'] = "$letterDir/c.png";
@@ -461,13 +480,13 @@ class IconGenerator
 
     protected function decodeLetters()
     {
-        foreach ($this->letters as $letter) {
+        foreach ($this->letters as &$letter) {
             $lines = explode('/', $letter);
 
-            foreach ($lines as $line) {
+            foreach ($lines as &$line) {
                 $dots = str_split($line);
 
-                foreach ($dots as $dot) {
+                foreach ($dots as &$dot) {
                     $dot = ('*' === $dot);
                 }
 

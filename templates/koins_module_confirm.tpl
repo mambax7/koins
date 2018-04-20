@@ -1,5 +1,5 @@
-<form action="<{$koins.url}>/index.php?controller=apply&amp;action=apply" method="post">
-    <{securityToken}><{*//mb*}>
+<form action="<{$koins.url}>/index.php?controller=module&amp;action=module" method="post">
+    <{securityToken}>
     <div class="xoopsConfirm">
         <{$smarty.const._KOINS_ARE_YOU_SURE_TO_APPLY}>
     </div>
@@ -19,7 +19,7 @@
                 <{/if}>
             </td>
             <td style="width:40px; text-align:center; vertical-align:middle;">
-                <img src="<{$koins.url}>/images/right.png">
+                <img src="<{$koins.url}>/assets/images/right.png">
             </td>
             <td class="even" style="width:50%; text-align:center; vertical-align:middle;">
                 <img src="<{$koins.new_icon}>">
@@ -31,7 +31,7 @@
                     <{$smarty.const._KOINS_NEW_ICON_CREATION}>
                 <{else}>
                     <{if $koins.module.is_renamable && !$koins.module.is_d3module}>
-                        <input type="checkbox" name="rename_icon" value="1" checked="checked">
+                        <input type="checkbox" name="rename_icon" value="1" checked>
                         <{$smarty.const._KOINS_ICON_RENAMED_INTO|sprintf:$koins.module.renamed_old_icon}>
                     <{elseif $koins.module.is_d3module}>
                         <{$smarty.const._KOINS_NEW_ICON_CREATION_IN|sprintf:$koins.module.name}>
@@ -50,7 +50,4 @@
             </td>
         </tr>
     </table>
-
-    <input type="hidden" name="ticket" value="<{$koins.ticket}>">
-
 </form>

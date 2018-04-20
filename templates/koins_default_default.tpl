@@ -1,4 +1,4 @@
-<!-- start koins_main_index.tpl -->
+<!-- start koins_default_default.tpl.tpl -->
 <h1><{$smarty.const._KOINS_TITLE_MAIN_INDEX}></h1>
 <div><{$smarty.const._KOINS_DESC_MAIN_INDEX}></div>
 
@@ -24,7 +24,7 @@
                     <div style="width:155px; float:left; padding:0 0px 5px 0;">
                         <{strip}>
                             <label>
-                                <input type="radio" name="plate" id="plate" value="<{$plate.name}>" <{if $koins.params.plate == $plate.name}>checked="checked"<{/if}>>
+                                <input type="radio" name="plate" id="plate" value="<{$plate.name}>" <{if $koins.params.plate == $plate.name}>checked<{/if}>>
                                 <img src="<{$plate.url}>" alt="<{$plate.title}>" width="<{$plate.width}>" height="<{$plate.height}>" style=" vertical-align:middle;" onclick="document.getElementById('plate_<{$plate.name}>').click();">
                             </label>
                         <{/strip}>
@@ -39,8 +39,8 @@
                     <div style="width:51px; float:left; padding:0 0px 5px 0;">
                         <{strip}>
                             <label>
-                                <input type="radio" name="icon" id="icon" value="<{$icon.name}>" <{if $koins.params.icon == $icon.name}>checked="checked"<{/if}>>
-                                <img src="<{$icon.url}>" alt="<{$icon.title}>" width="<{$icon.width}>" height="<{$icon.height}>" style="background-image:url(<{$koins.url}>/images/icon_back.png); vertical-align:middle;" onclick="document.getElementById('icon_<{$icon.name}>').click();">
+                                <input type="radio" name="icon" id="icon" value="<{$icon.name}>" <{if $koins.params.icon == $icon.name}>checked<{/if}>>
+                                <img src="<{$icon.url}>" alt="<{$icon.title}>" width="<{$icon.width}>" height="<{$icon.height}>" style="background-image:url(<{$koins.url}>/assets/images/icon_back.png); vertical-align:middle;" onclick="document.getElementById('icon_<{$icon.name}>').click();">
                             </label>
                         <{/strip}>
                     </div>
@@ -77,11 +77,11 @@
             <td class="head"><{$smarty.const._KOINS_IMG_TYPE}></td>
             <td class="<{cycle values="odd,even"}>">
                 <label>
-                    <input type="radio" name="img_type" id="img_type" value="png" <{if $koins.params.img_type == 'png'}>checked="checked"<{/if}>>
+                    <input type="radio" name="img_type" id="img_type" value="png" <{if $koins.params.img_type == 'png'}>checked<{/if}>>
                     <{$smarty.const._KOINS_PNG}>
                 </label>
                 <label>
-                    <input type="radio" name="img_type" id="img_type" value="gif" <{if $koins.params.img_type == 'gif'}>checked="checked"<{/if}>>
+                    <input type="radio" name="img_type" id="img_type" value="gif" <{if $koins.params.img_type == 'gif'}>checked<{/if}>>
                     <{$smarty.const._KOINS_GIF}>
                 </label>
             </td>
@@ -108,4 +108,4 @@
         </tr>
     </table>
 </form>
-<!-- end koins_main_index.tpl -->
+<!-- end koins_default_default.tpl -->

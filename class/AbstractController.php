@@ -50,7 +50,8 @@ abstract class AbstractController
         $GLOBALS['xoopsOption']['template_main'] = $this->template;
         $this->escapeHtml($this->data);
         $xoopsTpl->assign('koins', $this->data);
-        require_once XOOPS_ROOT_PATH . '/header.php';
+//        require_once XOOPS_ROOT_PATH . '/header.php';
+
         require_once XOOPS_ROOT_PATH . '/footer.php';
     }
 
@@ -71,12 +72,12 @@ abstract class AbstractController
     }
 
     /**
-     * @param $generator
+     * @param Koins\IconGenerator $generator
      */
     protected function generateImg($generator)
     {
-        $platePath = PartsManager::getPlatePath($this->params['plate']);
-        $iconPath  = PartsManager::getIconPath($this->params['icon']);
+        $platePath = Koins\PartsManager::getPlatePath($this->params['plate']);
+        $iconPath  = Koins\PartsManager::getIconPath($this->params['icon']);
 
         $generator->setImageType($this->params['img_type']);
         $generator->importPlateImg($platePath);
@@ -84,23 +85,31 @@ abstract class AbstractController
         $generator->setFontColor(0, 0, 0);
 
         if ('xoops2.png' === $this->params['plate']) {
-//            $generator->setFontTypeGothic();
+            $generator->setFontTypeArial();
             $generator->setIconPosition(32, 3);
             $lineWidth = $generator->getUpLineWidth($this->params['upline']);
             $lineX     = 45 - (int)($lineWidth / 0.55);
-            //$lineX = 39 - (int)($lineWidth / 2); //for non-gothic font
             $generator->setLinePosition($lineX, 39, 100, 100);
-            $generator->incuseUpline($this->params['upline']);
+            $generator->useUpline($this->params['upline']);
         } elseif ('xoopscube.png' === $this->params['plate']) {
+            $generator->setFontTypeDot();
             $generator->setIconPosition(100, 100);
             $generator->setLinePosition(40, 6, 40, 14);
-            $generator->incuseUpline($this->params['upline']);
-            $generator->incuseLowline($this->params['lowline']);
+            $generator->useUpline($this->params['upline']);
+            $generator->useLowline($this->params['lowline']);
+        } elseif ('Blank.png' === $this->params['plate']) {
+            $generator->setFontTypeGothic();
+            $generator->setIconPosition(15, 10);
+            $lineWidth = $generator->getUpLineWidth($this->params['upline']);
+            $lineX     = 30 - (int)($lineWidth / 0.55);
+            $generator->setLinePosition($lineX, 45, 55, 55);
+            $generator->useUpline($this->params['upline']);
+//            $generator->useLowline($this->params['lowline']);
         } else {
             $generator->setFontTypeGothic();
-            $generator->setLinePosition(31, 5, 31, 17);
-            $generator->incuseUpline($this->params['upline']);
-            $generator->incuseLowline($this->params['lowline']);
+            $generator->setLinePosition(35, 5, 35, 17);
+            $generator->useUpline($this->params['upline']);
+            $generator->useLowline($this->params['lowline']);
         }
     }
 }
